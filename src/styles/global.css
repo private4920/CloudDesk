@@ -1,0 +1,276 @@
+/**
+ * CloudDesk EDU Global Styles
+ * 
+ * Additional global styles and utilities that complement Tailwind.
+ * Keep this minimal - most styling should be done via Tailwind classes in JSX.
+ */
+
+/* ============================================
+   Typography Utilities
+   ============================================ */
+
+/* Heading styles matching design system */
+.heading-1 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: theme('colors.gray.900');
+}
+
+.heading-2 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: theme('colors.gray.900');
+}
+
+.heading-3 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: theme('colors.gray.900');
+}
+
+.heading-4 {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: theme('colors.gray.900');
+}
+
+/* Body text variants */
+.body-text {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: theme('colors.gray.900');
+}
+
+.body-small {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: theme('colors.gray.500');
+}
+
+.body-tiny {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: theme('colors.gray.500');
+}
+
+/* Label styles */
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: theme('colors.gray.900');
+}
+
+.label-small {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: theme('colors.gray.500');
+}
+
+/* ============================================
+   Layout Utilities
+   ============================================ */
+
+/* Page container with max-width and padding */
+.page-container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media (max-width: 1023px) {
+  .page-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .page-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Content area with vertical padding */
+.content-area {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .content-area {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+/* ============================================
+   Component Patterns
+   ============================================ */
+
+/* Card with consistent styling */
+.card-base {
+  background-color: white;
+  border: 1px solid theme('colors.gray.200');
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+}
+
+.card-large {
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.card-compact {
+  padding: 1rem;
+}
+
+/* Interactive card hover state */
+.card-interactive {
+  cursor: pointer;
+  transition: all 150ms ease-in-out;
+}
+
+.card-interactive:hover {
+  border-color: theme('colors.gray.300');
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================
+   Form Elements
+   ============================================ */
+
+/* Input base styles */
+.input-base {
+  width: 100%;
+  height: 40px;
+  padding: 0.5rem 0.75rem;
+  font-size: 14px;
+  font-weight: 400;
+  color: theme('colors.gray.900');
+  background-color: white;
+  border: 1px solid theme('colors.gray.200');
+  border-radius: 8px;
+  transition: all 150ms ease-in-out;
+}
+
+.input-base::placeholder {
+  color: theme('colors.gray.400');
+}
+
+.input-base:hover {
+  border-color: theme('colors.gray.300');
+}
+
+.input-base:focus {
+  outline: none;
+  border-color: theme('colors.indigo.600');
+  ring: 2px;
+  ring-color: theme('colors.indigo.600');
+  ring-offset: 0;
+}
+
+.input-base:disabled {
+  background-color: theme('colors.gray.50');
+  border-color: theme('colors.gray.200');
+  color: theme('colors.gray.400');
+  cursor: not-allowed;
+}
+
+/* Input error state */
+.input-error {
+  border-color: theme('colors.red.500');
+}
+
+.input-error:focus {
+  border-color: theme('colors.red.500');
+  ring-color: theme('colors.red.500');
+}
+
+/* ============================================
+   Accessibility
+   ============================================ */
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skip to main content link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: theme('colors.indigo.600');
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 200ms ease-out;
+}
+
+/* ============================================
+   Scrollbar Styling (Optional)
+   ============================================ */
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: theme('colors.gray.100');
+}
+
+::-webkit-scrollbar-thumb {
+  background: theme('colors.gray.300');
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: theme('colors.gray.400');
+}

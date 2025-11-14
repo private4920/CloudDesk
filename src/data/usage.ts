@@ -1,0 +1,114 @@
+import type { Instance, UsageRow, UsageSummary, DailyUsage, PricingConfig } from './types';
+import { calculateHourlyCost, calculateCostForHours } from './pricing';
+
+/**
+ * Hard-coded usage hours for demo instances
+ * Maps instance ID to hours used in the current period
+ */
+const DEMO_USAGE_HOURS: Record<string, number> = {
+  'inst-001': 42.5, // Ubuntu 22.04 LTS
+  'inst-002': 38.0, // Windows 11 Pro
+  'inst-003': 28.5, // Data Science ML
+  'inst-004': 22.0, // Development Env
+  'inst-005': 11.5, // 3D Rendering
+  'inst-006': 0.0, // Testing Environment (just provisioned)
+};
+
+/**
+ * Build usage data for all instances
+ */
+export function buildUsage(instances: Instance[], _pricing?: PricingConfig): UsageRow[] {
+  return instances.map((instance) => {
+    const hours = DEMO_USAGE_HOURS[instance.id] || 0;
+    const avgHourlyRate = calculateHourlyCost(instance);
+    const estimatedCost = calculateCostForHours(instance, hours);
+
+    return {
+      instanceId: instance.id,
+      instanceName: instance.name,
+      status: instance.status,
+      hours,
+      avgHourlyRate,
+      estimatedCost,
+    };
+  });
+}
+
+/**
+ * Calculate usage summary from usage rows
+ */
+export function calculateUsageSummary(usageRows: UsageRow[]): UsageSummary {
+  const totalHours = usageRows.reduce((sum, row) => sum + row.hours, 0);
+  const totalCost = usageRows.reduce((sum, row) => sum + row.estimatedCost, 0);
+  const activeDesktops = usageRows.filter((row) => row.hours > 0).length;
+  const averageCostPerDesktop = activeDesktops > 0 ? totalCost / activeDesktops : 0;
+
+  return {
+    totalHours: Math.round(totalHours * 10) / 10,
+    totalCost: Math.round(totalCost * 100) / 100,
+    averageCostPerDesktop: Math.round(averageCostPerDesktop * 100) / 100,
+    activeDesktops,
+  };
+}
+
+/**
+ * Generate daily usage data for the last 30 days
+ * This creates a realistic-looking chart with variation
+ */
+export function generateDailyUsage(_instances?: Instance[]): DailyUsage[] {
+  const dailyData: DailyUsage[] = [];
+  const today = new Date('2024-01-20'); // Fixed date for demo consistency
+
+  // Base daily costs with realistic variation
+  const baseDailyCosts = [
+    1.85, 2.12, 2.45, 1.92, 2.18, 1.65, 1.42, // Week 1 (weekend lower)
+    2.35, 2.58, 2.72, 2.45, 2.38, 1.88, 1.55, // Week 2
+    2.42, 2.65, 2.88, 2.52, 2.45, 1.95, 1.68, // Week 3
+    2.55, 2.78, 3.12, 2.85, 2.62, 2.15, 1.82, // Week 4
+    2.68, 2.92, // Last 2 days
+  ];
+
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+
+    const cost = baseDailyCosts[29 - i] || 2.0;
+    const hours = Math.round((cost / 0.42) * 10) / 10; // Approximate hours based on avg rate
+
+    dailyData.push({
+      date: date.toISOString().split('T')[0],
+      cost: Math.round(cost * 100) / 100,
+      hours: Math.round(hours * 10) / 10,
+    });
+  }
+
+  return dailyData;
+}
+
+/**
+ * Get usage for a specific instance
+ */
+export function getInstanceUsage(instanceId: string): number {
+  return DEMO_USAGE_HOURS[instanceId] || 0;
+}
+
+/**
+ * Calculate total storage used across all instances
+ */
+export function calculateTotalStorage(instances: Instance[]): number {
+  return instances.reduce((sum, instance) => sum + instance.storageGb, 0);
+}
+
+/**
+ * Get instances sorted by cost (highest first)
+ */
+export function sortInstancesByCost(usageRows: UsageRow[]): UsageRow[] {
+  return [...usageRows].sort((a, b) => b.estimatedCost - a.estimatedCost);
+}
+
+/**
+ * Get instances sorted by hours (highest first)
+ */
+export function sortInstancesByHours(usageRows: UsageRow[]): UsageRow[] {
+  return [...usageRows].sort((a, b) => b.hours - a.hours);
+}
