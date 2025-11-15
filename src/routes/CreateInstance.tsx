@@ -188,27 +188,27 @@ export default function CreateInstance() {
   const selectedPreset = IMAGE_PRESETS.find((p) => p.id === selectedPresetId);
 
   return (
-    <div className="mx-auto max-w-7xl px-8 py-6">
+    <div>
       {/* Page Header */}
-      <div className="mb-6">
-        <div className="mb-2 text-sm text-gray-500">
+      <div className="mb-4 sm:mb-6">
+        <div className="mb-2 text-xs sm:text-sm text-gray-500">
           <Link to="/dashboard" className="hover:text-gray-900">
             Dashboard
           </Link>
           <span className="mx-2">/</span>
           <span className="text-gray-900">Create Desktop</span>
         </div>
-        <h1 className="text-2xl font-semibold text-gray-900">Create New Desktop</h1>
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">Create New Desktop</h1>
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
           {/* Left Column - Configuration Form */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {/* Preset Selection - Compact */}
-            <Card className="p-6">
+            <Card className="p-4 sm:p-6">
               <h2 className="mb-4 text-base font-semibold text-gray-900">1. Choose Preset</h2>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {IMAGE_PRESETS.map((preset) => {
                   const Icon = PRESET_ICONS[preset.id] || Monitor;
                   const isSelected = selectedPresetId === preset.id;
@@ -236,7 +236,7 @@ export default function CreateInstance() {
             </Card>
 
             {/* Basic Configuration */}
-            <Card className="p-6">
+            <Card className="p-4 sm:p-6">
               <h2 className="mb-4 text-base font-semibold text-gray-900">2. Basic Configuration</h2>
               <div className="space-y-4">
                 {/* Instance Name */}
@@ -278,7 +278,7 @@ export default function CreateInstance() {
             </Card>
 
             {/* Resources */}
-            <Card className="p-6">
+            <Card className="p-4 sm:p-6">
               <h2 className="mb-4 text-base font-semibold text-gray-900">3. Resources</h2>
               <div className="space-y-5">
 
@@ -366,7 +366,7 @@ export default function CreateInstance() {
             </Card>
 
             {/* GPU Selection - Compact */}
-            <Card className="p-6">
+            <Card className="p-4 sm:p-6">
               <h2 className="mb-4 text-base font-semibold text-gray-900">4. GPU (Optional)</h2>
               <div className="space-y-2">
 
@@ -387,11 +387,11 @@ export default function CreateInstance() {
             </Card>
           </div>
 
-          {/* Right Column - Summary (Sticky) */}
+          {/* Right Column - Summary (Sticky on desktop) */}
           <div className="lg:col-span-1">
-            <div className="sticky top-6 space-y-4">
+            <div className="lg:sticky lg:top-6 space-y-4">
               {/* Configuration Summary */}
-              <Card className="p-6">
+              <Card className="p-4 sm:p-6">
                 <h3 className="mb-4 text-base font-semibold text-gray-900">Configuration Summary</h3>
                 
                 {/* Preset */}
@@ -441,19 +441,19 @@ export default function CreateInstance() {
               </Card>
 
               {/* Cost Summary */}
-              <Card className="p-6 bg-indigo-50 border-indigo-200">
+              <Card className="p-4 sm:p-6 bg-indigo-50 border-indigo-200">
                 <h3 className="mb-4 text-base font-semibold text-gray-900">Cost Estimate</h3>
                 <div className="space-y-3">
                   <div>
                     <p className="text-xs text-gray-600 mb-1">Hourly</p>
-                    <p className="text-2xl font-semibold text-gray-900">
+                    <p className="text-xl sm:text-2xl font-semibold text-gray-900">
                       ${hourlyCost.toFixed(2)}<span className="text-sm font-normal text-gray-600">/hr</span>
                     </p>
                   </div>
                   <div className="pt-3 border-t border-indigo-200">
                     <p className="text-xs text-gray-600 mb-1">Monthly estimate</p>
                     <p className="text-xs text-gray-500 mb-2">(8 hrs/day, 22 days)</p>
-                    <p className="text-xl font-semibold text-gray-900">
+                    <p className="text-lg sm:text-xl font-semibold text-gray-900">
                       ${monthlyCost.toFixed(2)}<span className="text-sm font-normal text-gray-600">/mo</span>
                     </p>
                   </div>

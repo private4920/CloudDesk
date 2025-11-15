@@ -9,12 +9,12 @@ export default function Landing() {
     <div className="min-h-screen bg-white">
       {/* Top Navigation */}
       <nav className="sticky top-0 z-40 bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-8 lg:px-16">
-          <div className="flex items-center justify-between h-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
+          <div className="flex items-center justify-between h-14 sm:h-16">
             {/* Left: Logo + Brand */}
-            <div className="flex items-center gap-8">
+            <div className="flex items-center gap-4 sm:gap-8">
               <Link to="/">
-                <img src="/logo-clouddesk.png" alt="CloudDesk EDU" className="w-12 h-12 object-contain hover:opacity-80 transition-opacity" />
+                <img src="/logo-clouddesk.png" alt="CloudDesk EDU" className="w-10 h-10 sm:w-12 sm:h-12 object-contain hover:opacity-80 transition-opacity" />
               </Link>
               
               {/* Center: Navigation Links */}
@@ -35,8 +35,8 @@ export default function Landing() {
             </div>
 
             {/* Right: Actions */}
-            <div className="flex items-center gap-3">
-              <Link to="/dashboard">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Link to="/dashboard" className="hidden sm:block">
                 <Button variant="ghost" size="sm">
                   Sign In
                 </Button>
@@ -52,9 +52,9 @@ export default function Landing() {
       </nav>
 
       {/* Hero Section */}
-      <section className="py-20 lg:py-32">
-        <div className="max-w-7xl mx-auto px-8 lg:px-16">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <section className="py-16 sm:py-20 lg:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
             {/* Left: Text Content */}
             <div>
               <div className="inline-block mb-4">
@@ -62,10 +62,10 @@ export default function Landing() {
                   Cloud desktops for underpowered devices
                 </span>
               </div>
-              <h1 className="text-5xl lg:text-6xl font-semibold text-gray-900 leading-tight mb-6">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-gray-900 leading-tight mb-6">
                 Access powerful computing from any device
               </h1>
-              <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-xl">
+              <p className="text-base sm:text-lg text-gray-600 leading-relaxed mb-8 max-w-xl">
                 CloudDesk EDU provides instant access to fully-configured cloud
                 desktops. Run resource-intensive applications, collaborate with
                 your team, and work from anywhere—without expensive hardware.
@@ -155,45 +155,45 @@ export default function Landing() {
       </section>
 
       {/* Who It's For Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-8 lg:px-16">
-          <div className="text-center mb-12">
+      <section className="py-16 sm:py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
+          <div className="text-center mb-8 sm:mb-12">
             <span className="text-sm font-medium text-indigo-600 tracking-wide">
               Who It's For
             </span>
-            <h2 className="text-4xl font-semibold text-gray-900 mt-3 mb-4">
+            <h2 className="text-3xl sm:text-4xl font-semibold text-gray-900 mt-3 mb-4">
               Built for students, educators, and professionals
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
               Whether you're learning, teaching, or building, CloudDesk EDU
               adapts to your needs.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {/* Students Card */}
-            <Card className="p-8 hover:shadow-lg hover:border-gray-300 transition-all">
+            <Card className="p-6 sm:p-8 hover:shadow-lg hover:border-gray-300 transition-all">
               <div className="w-14 h-14 bg-indigo-50 rounded-lg flex items-center justify-center mb-6">
                 <GraduationCap className="w-7 h-7 text-indigo-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">
                 Students
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                 Run demanding software for coursework without buying expensive
                 hardware. Access your desktop from the library, dorm, or home.
               </p>
             </Card>
 
             {/* Lecturers Card */}
-            <Card className="p-8 hover:shadow-lg hover:border-gray-300 transition-all">
+            <Card className="p-6 sm:p-8 hover:shadow-lg hover:border-gray-300 transition-all">
               <div className="w-14 h-14 bg-indigo-50 rounded-lg flex items-center justify-center mb-6">
                 <Users className="w-7 h-7 text-indigo-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">
                 Lecturers & Educators
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                 Provide consistent environments for all students. Manage
                 classroom desktops, share resources, and ensure everyone has the
                 tools they need.
@@ -201,14 +201,14 @@ export default function Landing() {
             </Card>
 
             {/* Professionals Card */}
-            <Card className="p-8 hover:shadow-lg hover:border-gray-300 transition-all">
+            <Card className="p-6 sm:p-8 hover:shadow-lg hover:border-gray-300 transition-all">
               <div className="w-14 h-14 bg-indigo-50 rounded-lg flex items-center justify-center mb-6">
                 <Briefcase className="w-7 h-7 text-indigo-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">
                 Professionals & Engineers
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                 Scale your computing power on demand. Run builds, simulations,
                 and data processing without infrastructure overhead.
               </p>
@@ -218,15 +218,15 @@ export default function Landing() {
       </section>
 
       {/* Key Benefits Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-8 lg:px-16">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-semibold text-gray-900 mb-4">
+      <section className="py-16 sm:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl font-semibold text-gray-900 mb-4">
               Why CloudDesk EDU?
             </h2>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
             {/* Benefit 1 */}
             <div className="text-center">
               <div className="w-10 h-10 bg-indigo-600 rounded-lg mx-auto mb-4 flex items-center justify-center">
@@ -287,12 +287,12 @@ export default function Landing() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 bg-indigo-50">
-        <div className="max-w-3xl mx-auto px-8 text-center">
-          <h2 className="text-4xl font-semibold text-gray-900 mb-4">
+      <section className="py-16 sm:py-20 bg-indigo-50">
+        <div className="max-w-3xl mx-auto px-4 sm:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-gray-900 mb-4">
             Ready to get started?
           </h2>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-base sm:text-lg text-gray-600 mb-8">
             Create your first cloud desktop in under 60 seconds. No credit card
             required.
           </p>
@@ -309,8 +309,8 @@ export default function Landing() {
 
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-12">
-        <div className="max-w-7xl mx-auto px-8 lg:px-16">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             {/* Branding */}
             <div>
               <div className="mb-4">
@@ -386,7 +386,7 @@ export default function Landing() {
             </div>
           </div>
 
-          <div className="pt-8 border-t border-gray-800 text-sm text-center md:text-left">
+          <div className="pt-8 border-t border-gray-800 text-sm text-center">
             © 2025 CloudDesk EDU. All rights reserved.
           </div>
         </div>

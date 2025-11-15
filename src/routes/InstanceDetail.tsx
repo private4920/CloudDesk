@@ -102,16 +102,16 @@ export default function InstanceDetail() {
   const createdText = daysAgo === 0 ? 'Today' : daysAgo === 1 ? 'Yesterday' : `${daysAgo} days ago`;
 
   return (
-    <div className="max-w-7xl mx-auto px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
       {/* Toast */}
       {toast && (
-        <div className="fixed top-20 right-8 z-50 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg animate-fade-in">
+        <div className="fixed top-20 right-4 sm:right-8 z-50 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg animate-fade-in">
           {toast}
         </div>
       )}
 
       {/* Page Header */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         {/* Back button */}
         <Link 
           to="/dashboard"
@@ -122,8 +122,8 @@ export default function InstanceDetail() {
         </Link>
 
         {/* Header card */}
-        <Card className="p-6">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+        <Card className="p-4 sm:p-6">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-6">
             {/* Left: Title and metadata */}
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-3">
@@ -152,9 +152,9 @@ export default function InstanceDetail() {
             </div>
 
             {/* Right: Actions */}
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
               {instance.status === 'RUNNING' && (
-                <Button onClick={() => setShowConnectModal(true)}>
+                <Button onClick={() => setShowConnectModal(true)} className="w-full sm:w-auto">
                   <ExternalLink className="w-4 h-4" />
                   Connect
                 </Button>
@@ -165,6 +165,7 @@ export default function InstanceDetail() {
                   variant="secondary" 
                   onClick={handleToggleStatus}
                   disabled={isActionLoading}
+                  className="w-full sm:w-auto"
                 >
                   {instance.status === 'RUNNING' ? (
                     <>
@@ -180,7 +181,7 @@ export default function InstanceDetail() {
                 </Button>
               )}
 
-              <Button variant="secondary" onClick={handleBackup}>
+              <Button variant="secondary" onClick={handleBackup} className="w-full sm:w-auto">
                 <Save className="w-4 h-4" />
                 Backup
               </Button>
@@ -189,6 +190,7 @@ export default function InstanceDetail() {
                 variant="destructive" 
                 onClick={() => setShowDeleteModal(true)}
                 disabled={isActionLoading}
+                className="w-full sm:w-auto"
               >
                 <Trash2 className="w-4 h-4" />
                 Delete
@@ -199,10 +201,10 @@ export default function InstanceDetail() {
       </div>
 
       {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Left: Configuration */}
         <div className="lg:col-span-2">
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-6">Configuration</h2>
             
             <dl className="space-y-6">
@@ -296,7 +298,7 @@ export default function InstanceDetail() {
 
         {/* Right: Usage & Cost */}
         <div>
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-6">Usage & Cost</h2>
             
             <div className="space-y-6">
@@ -347,7 +349,7 @@ export default function InstanceDetail() {
       {/* Connect Modal */}
       {showConnectModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <Card className="max-w-lg w-full p-8 relative">
+          <Card className="max-w-lg w-full mx-4 p-6 sm:p-8 relative">
             <button
               onClick={() => setShowConnectModal(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
@@ -395,7 +397,7 @@ export default function InstanceDetail() {
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <Card className="max-w-md w-full p-8 relative">
+          <Card className="max-w-md w-full mx-4 p-6 sm:p-8 relative">
             <button
               onClick={() => setShowDeleteModal(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"

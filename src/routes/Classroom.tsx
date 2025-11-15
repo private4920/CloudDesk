@@ -43,7 +43,7 @@ export default function Classroom() {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto px-8 py-12">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
       {/* Page Header */}
       <div className="text-center mb-8">
         <h1 className="text-3xl font-semibold text-gray-900 mb-3">Classroom Mode</h1>
@@ -55,7 +55,7 @@ export default function Classroom() {
       </div>
 
       {/* Hero Card */}
-      <Card className="p-8 md:p-12 mb-8 shadow-lg">
+      <Card className="p-6 sm:p-8 md:p-12 mb-6 sm:mb-8 shadow-lg">
         <div className="text-center mb-8">
           <div className="w-16 h-16 rounded-full bg-indigo-50 flex items-center justify-center mx-auto mb-6">
             <GraduationCap className="w-8 h-8 text-indigo-600" />
@@ -95,7 +95,7 @@ export default function Classroom() {
             <label className="block text-sm font-medium text-gray-900 mb-3">
               Desktop Preset
             </label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {presets.map((preset) => {
                 const Icon = preset.icon;
                 const isSelected = selectedPreset === preset.id;
@@ -172,7 +172,7 @@ export default function Classroom() {
       </Card>
 
       {/* Benefits Section */}
-      <Card className="p-8 mb-8">
+      <Card className="p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
         <h3 className="text-xl font-semibold text-gray-900 mb-6">Why Classroom Mode?</h3>
         
         <div className="space-y-6">
@@ -269,7 +269,7 @@ export default function Classroom() {
       </Card>
 
       {/* Interest CTA */}
-      <Card className="p-8 bg-indigo-50 border-indigo-200 text-center">
+      <Card className="p-6 sm:p-8 bg-indigo-50 border-indigo-200 text-center">
         <h3 className="text-xl font-semibold text-gray-900 mb-3">
           Interested in Classroom Mode?
         </h3>

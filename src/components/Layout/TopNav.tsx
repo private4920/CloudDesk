@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Bell, HelpCircle, User, LogOut } from 'lucide-react';
+import { Bell, HelpCircle, User, LogOut, Menu } from 'lucide-react';
 import { Badge } from '../ui/Badge';
 
-export const TopNav: React.FC = () => {
+interface TopNavProps {
+  onMenuClick?: () => void;
+}
+
+export const TopNav: React.FC<TopNavProps> = ({ onMenuClick }) => {
   const location = useLocation();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -25,12 +29,23 @@ export const TopNav: React.FC = () => {
   const unreadCount = notifications.filter(n => n.unread).length;
 
   return (
-    <nav className="sticky top-0 z-40 bg-white border-b border-gray-200 ml-60">
-      <div className="px-6 md:px-8">
+    <nav className="fixed top-0 right-0 left-0 lg:left-60 z-40 bg-white border-b border-gray-200 h-16">
+      <div className="px-4 sm:px-6 md:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Left: Page Title */}
-          <div>
-            <h1 className="text-base font-semibold text-gray-900">
+          {/* Left: Hamburger + Page Title */}
+          <div className="flex items-center gap-3">
+            {/* Hamburger Menu - visible on mobile/tablet */}
+            {onMenuClick && (
+              <button
+                onClick={onMenuClick}
+                className="lg:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Open navigation menu"
+              >
+                <Menu className="w-6 h-6" />
+              </button>
+            )}
+            
+            <h1 className="text-base font-semibold text-gray-900 hidden sm:block">
               {location.pathname === '/dashboard' && 'Instances'}
               {location.pathname === '/create' && 'Create Instance'}
               {location.pathname === '/usage' && 'Usage & Billing'}

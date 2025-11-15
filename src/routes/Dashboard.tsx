@@ -94,11 +94,11 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-8 py-8">
+    <div>
       {/* Page Header */}
-      <div className="mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between">
+      <div className="mb-6 sm:mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="mb-1 text-2xl font-semibold text-gray-900">
+          <h1 className="mb-1 text-xl sm:text-2xl font-semibold text-gray-900">
             Instances
           </h1>
           <p className="max-w-2xl text-sm text-gray-500">
@@ -116,16 +116,16 @@ export default function Dashboard() {
       </div>
 
       {/* Summary Metrics Row */}
-      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-6 sm:mb-8 grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total Instances */}
-        <Card className="p-6">
+        <Card className="p-5 sm:p-6">
           <div className="flex items-start justify-between">
             <div>
-              <Monitor className="mb-3 h-6 w-6 text-indigo-600" />
+              <Monitor className="mb-3 h-5 w-5 sm:h-6 sm:w-6 text-indigo-600" />
               <p className="mb-2 text-sm font-medium text-gray-500">
                 Total Desktops
               </p>
-              <p className="text-3xl font-semibold text-gray-900">
+              <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
                 {totalInstances}
               </p>
               <p className="mt-1 text-xs text-gray-500">
@@ -136,14 +136,14 @@ export default function Dashboard() {
         </Card>
 
         {/* Running Instances */}
-        <Card className="p-6">
+        <Card className="p-5 sm:p-6">
           <div className="flex items-start justify-between">
             <div>
-              <Activity className="mb-3 h-6 w-6 text-emerald-600" />
+              <Activity className="mb-3 h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
               <p className="mb-2 text-sm font-medium text-gray-500">
                 Running Now
               </p>
-              <p className="text-3xl font-semibold text-gray-900">
+              <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
                 {runningInstances}
               </p>
               <p className="mt-1 text-xs text-gray-500">
@@ -154,14 +154,14 @@ export default function Dashboard() {
         </Card>
 
         {/* Estimated Monthly Cost */}
-        <Card className="p-6">
+        <Card className="p-5 sm:p-6">
           <div className="flex items-start justify-between">
             <div>
-              <DollarSign className="mb-3 h-6 w-6 text-indigo-600" />
+              <DollarSign className="mb-3 h-5 w-5 sm:h-6 sm:w-6 text-indigo-600" />
               <p className="mb-2 text-sm font-medium text-gray-500">
                 Est. Monthly Cost
               </p>
-              <p className="text-3xl font-semibold text-gray-900">
+              <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
                 ${estimatedMonthlyCost.toFixed(2)}
               </p>
               <p className="mt-1 text-xs text-gray-500">
@@ -172,14 +172,14 @@ export default function Dashboard() {
         </Card>
 
         {/* Storage Used */}
-        <Card className="p-6">
+        <Card className="p-5 sm:p-6">
           <div className="flex items-start justify-between">
             <div>
-              <Monitor className="mb-3 h-6 w-6 text-indigo-600" />
+              <Monitor className="mb-3 h-5 w-5 sm:h-6 sm:w-6 text-indigo-600" />
               <p className="mb-2 text-sm font-medium text-gray-500">
                 Storage Used
               </p>
-              <p className="text-3xl font-semibold text-gray-900">
+              <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
                 {instances.reduce((total, instance) => total + instance.storageGb, 0)}{' '}
                 GB
               </p>
@@ -190,9 +190,9 @@ export default function Dashboard() {
       </div>
 
       {/* Search and Filters */}
-      <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         {/* Search Input */}
-        <div className="relative max-w-md flex-1">
+        <div className="relative w-full sm:max-w-md sm:flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
           <Input
             type="text"
@@ -204,11 +204,11 @@ export default function Dashboard() {
         </div>
 
         {/* Status Filter Tabs */}
-        <div className="flex items-center">
-          <div className="inline-flex rounded-lg bg-gray-100 p-1">
+        <div className="flex items-center overflow-x-auto">
+          <div className="inline-flex rounded-lg bg-gray-100 p-1 whitespace-nowrap">
             <button
               onClick={() => setStatusFilter('all')}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              className={`rounded-md px-2.5 sm:px-3 py-1.5 text-sm font-medium transition-colors ${
                 statusFilter === 'all'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
@@ -218,7 +218,7 @@ export default function Dashboard() {
             </button>
             <button
               onClick={() => setStatusFilter('running')}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              className={`rounded-md px-2.5 sm:px-3 py-1.5 text-sm font-medium transition-colors ${
                 statusFilter === 'running'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
@@ -228,7 +228,7 @@ export default function Dashboard() {
             </button>
             <button
               onClick={() => setStatusFilter('stopped')}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              className={`rounded-md px-2.5 sm:px-3 py-1.5 text-sm font-medium transition-colors ${
                 statusFilter === 'stopped'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
@@ -238,7 +238,7 @@ export default function Dashboard() {
             </button>
             <button
               onClick={() => setStatusFilter('provisioning')}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              className={`rounded-md px-2.5 sm:px-3 py-1.5 text-sm font-medium transition-colors ${
                 statusFilter === 'provisioning'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
@@ -253,19 +253,19 @@ export default function Dashboard() {
       {/* Instance List - Card Layout */}
       {filteredInstances.length === 0 ? (
         /* Empty State */
-        <Card className="p-16 text-center">
-          <Monitor className="mx-auto mb-6 h-16 w-16 text-gray-300" />
-          <h3 className="mb-3 text-lg font-semibold text-gray-900">
+        <Card className="p-8 sm:p-12 lg:p-16 text-center">
+          <Monitor className="mx-auto mb-4 sm:mb-6 h-12 w-12 sm:h-16 sm:w-16 text-gray-300" />
+          <h3 className="mb-2 sm:mb-3 text-base sm:text-lg font-semibold text-gray-900">
             {instances.length === 0 ? 'No desktops yet' : 'No desktops found'}
           </h3>
-          <p className="mx-auto mb-8 max-w-md text-gray-600">
+          <p className="mx-auto mb-6 sm:mb-8 max-w-md text-sm sm:text-base text-gray-600">
             {instances.length === 0
               ? 'Create your first cloud desktop to get started. Choose from pre-configured templates or customize your own.'
               : 'No desktops match your current filters. Try adjusting your search or filter criteria.'}
           </p>
           {instances.length === 0 ? (
             <Link to="/create">
-              <Button variant="primary" size="lg">
+              <Button variant="primary" size="lg" className="w-full sm:w-auto">
                 <Plus className="mr-2 h-4 w-4" />
                 Create Your First Desktop
               </Button>
@@ -273,6 +273,7 @@ export default function Dashboard() {
           ) : (
             <Button
               variant="secondary"
+              className="w-full sm:w-auto"
               onClick={() => {
                 setSearchQuery('');
                 setStatusFilter('all');
@@ -287,12 +288,12 @@ export default function Dashboard() {
         <div className="space-y-3">
           {filteredInstances.map((instance) => (
             <Link key={instance.id} to={`/instances/${instance.id}`}>
-              <Card className="p-5 hover:border-gray-300 hover:shadow-md transition-all cursor-pointer">
-                <div className="flex items-start justify-between gap-4">
+              <Card className="p-4 sm:p-5 hover:border-gray-300 hover:shadow-md transition-all cursor-pointer">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
                   {/* Left: Name, Status, Resources */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-base font-semibold text-gray-900 truncate">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                      <h3 className="text-sm sm:text-base font-semibold text-gray-900 truncate">
                         {instance.name}
                       </h3>
                       <Badge variant={getStatusVariant(instance.status)}>
@@ -300,12 +301,12 @@ export default function Dashboard() {
                       </Badge>
                     </div>
                     
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600">
+                    <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 gap-y-1 text-xs sm:text-sm text-gray-600">
                       <span className="flex items-center gap-1">
                         <Monitor className="h-3.5 w-3.5" />
                         {getPresetName(instance.imageId)}
                       </span>
-                      <span>•</span>
+                      <span className="hidden sm:inline">•</span>
                       <span>{instance.cpuCores} vCPU</span>
                       <span>•</span>
                       <span>{instance.ramGb} GB RAM</span>
@@ -313,7 +314,7 @@ export default function Dashboard() {
                       <span>{instance.storageGb} GB</span>
                     </div>
                     
-                    <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
+                    <div className="mt-2 flex items-center gap-3 sm:gap-4 text-xs text-gray-500">
                       <span>{REGION_NAMES[instance.region]}</span>
                       <span>•</span>
                       <span>{getRelativeTime(instance.createdAt)}</span>
@@ -321,7 +322,7 @@ export default function Dashboard() {
                   </div>
 
                   {/* Right: Actions */}
-                  <div className="flex items-center gap-3 flex-shrink-0">
+                  <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                     {/* Connect Button (only for running instances) */}
                     {instance.status === 'RUNNING' && (
                       <Button

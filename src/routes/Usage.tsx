@@ -14,9 +14,9 @@ export default function Usage() {
   const sortedUsage = [...usageRows].sort((a, b) => b.estimatedCost - a.estimatedCost);
 
   return (
-    <div className="max-w-7xl mx-auto px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
       {/* Page Header */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">Usage & Cost</h1>
         <p className="text-sm text-gray-500">
           Track your cloud desktop usage and estimated costs. All charges are based on actual runtime.
@@ -24,7 +24,7 @@ export default function Usage() {
       </div>
 
       {/* Summary Metrics Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {/* Total Hours */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-4">
@@ -72,7 +72,7 @@ export default function Usage() {
       </div>
 
       {/* Usage Chart Area */}
-      <Card className="p-6 mb-8">
+      <Card className="p-4 sm:p-6 mb-6 sm:mb-8">
         <h2 className="text-lg font-semibold text-gray-900 mb-6">Usage by Instance</h2>
         
         {/* Simple bar chart visualization */}
@@ -130,11 +130,12 @@ export default function Usage() {
 
       {/* Detailed Breakdown Table */}
       <Card className="overflow-hidden">
-        <div className="px-6 py-5 border-b border-gray-200">
+        <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">Cost by Desktop</h2>
         </div>
         
-        <div className="overflow-x-auto">
+        {/* Desktop: Table */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
@@ -216,6 +217,68 @@ export default function Usage() {
               </tr>
             </tfoot>
           </table>
+        </div>
+        
+        {/* Mobile: Cards */}
+        <div className="md:hidden p-4 space-y-3">
+          {sortedUsage.map((row) => {
+            const instance = instances.find(i => i.id === row.instanceId);
+            return (
+              <div key={row.instanceId} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-gray-900 truncate">{row.instanceName}</h3>
+                    {instance && (
+                      <p className="text-xs text-gray-500 mt-0.5">{REGION_NAMES[instance.region]}</p>
+                    )}
+                  </div>
+                  <Badge 
+                    variant={
+                      row.status === 'RUNNING' ? 'success' : 
+                      row.status === 'STOPPED' ? 'neutral' : 
+                      'info'
+                    }
+                  >
+                    {row.status === 'RUNNING' ? 'Running' : 
+                     row.status === 'STOPPED' ? 'Stopped' : 
+                     'Provisioning'}
+                  </Badge>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Hours Used:</span>
+                    <span className="font-medium text-gray-900">{row.hours.toFixed(1)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Hourly Rate:</span>
+                    <span className="font-medium text-gray-900">${row.avgHourlyRate.toFixed(2)}/hr</span>
+                  </div>
+                  <div className="flex justify-between pt-2 border-t border-gray-200">
+                    <span className="text-gray-500 font-medium">Total Cost:</span>
+                    <span className="font-semibold text-gray-900">${row.estimatedCost.toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          
+          {/* Total Summary */}
+          <div className="p-4 bg-indigo-50 rounded-lg border-2 border-indigo-200">
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-700 font-medium">Total Hours:</span>
+                <span className="font-semibold text-gray-900">{summary.totalHours.toFixed(1)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-700 font-medium">Avg Rate:</span>
+                <span className="font-semibold text-gray-900">${(summary.totalCost / summary.totalHours || 0).toFixed(2)}/hr</span>
+              </div>
+              <div className="flex justify-between pt-2 border-t border-indigo-300">
+                <span className="text-gray-900 font-semibold">Total Cost:</span>
+                <span className="font-bold text-gray-900 text-base">${summary.totalCost.toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </Card>
     </div>
