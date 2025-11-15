@@ -1,11 +1,19 @@
-# CloudDesk EDU
+<div align="center">
+  <img src="public/logo-clouddesk.png" alt="CloudDesk EDU Logo" width="120" height="120">
+  
+  # CloudDesk EDU
+  
+  ### Enterprise-grade cloud desktop platform for students, educators, and professionals
+  
+  [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue?logo=typescript)](https://www.typescriptlang.org/)
+  [![React](https://img.shields.io/badge/React-18.3-61dafb?logo=react)](https://react.dev/)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
+  [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+  
+  [Live Demo](https://clouddesk-edu.vercel.app) · [Documentation](docs/) · [Report Bug](https://github.com/rofiperlungoding/CloudDesk/issues)
+</div>
 
-> Enterprise-grade cloud desktop platform for students, educators, and professionals
-
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18.3-61dafb?logo=react)](https://react.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+---
 
 CloudDesk EDU is a modern, enterprise-grade SaaS platform that provides instant access to fully-configured cloud desktops. Built for educational institutions and professionals who need powerful computing resources without expensive hardware investments.
 
@@ -14,8 +22,9 @@ CloudDesk EDU is a modern, enterprise-grade SaaS platform that provides instant 
 ### 🖥️ Cloud Desktop Management
 - **Instant Provisioning**: Deploy fully-configured desktops in seconds
 - **Multiple Presets**: Pre-optimized configurations for Development, Data Science, 3D Rendering, and General Purpose
-- **Flexible Resources**: Scale CPU, RAM, storage, and GPU on demand
-- **Multi-Region Support**: Deploy in US East, US West, EU, and Asia Pacific regions
+- **Flexible Resources**: Scale CPU (2-32 cores), RAM (4-128 GB), storage (30GB-2TB), and GPU on demand
+- **13 Global Regions**: Deploy in US (4 regions), EU (4 regions), Asia Pacific (3 regions), Middle East, and South America
+- **8 GPU Options**: From entry-level T4 to enterprise H100, categorized by use case (Entry, Professional, Enterprise, Workstation)
 
 ### 📊 Usage Analytics & Cost Management
 - **Real-time Monitoring**: Track resource usage and costs as they happen
@@ -138,7 +147,7 @@ CloudDesk EDU follows a comprehensive design system built for enterprise applica
 
 ### Color Palette
 
-- **Primary**: Indigo 600 (`#4F46E5`) - Actions, links, focus states
+- **Primary**: Teal 600 (`#0F766E`) - Actions, links, focus states
 - **Neutrals**: Gray 50-900 - Text, backgrounds, borders
 - **Success**: Emerald 500 (`#10B981`) - Positive states
 - **Warning**: Amber 500 (`#F59E0B`) - Caution states
@@ -219,6 +228,8 @@ import { Badge } from '@/components/ui/Badge';
 - **`/product`** - Product features and benefits
 - **`/pricing`** - Pricing plans and comparison
 - **`/use-cases`** - Use case examples and testimonials
+- **`/about`** - Company mission, vision, and values
+- **`/contact`** - Contact form and support information
 - **`/docs`** - Documentation hub
 - **`/docs/getting-started`** - Getting started guide
 - **`/docs/api`** - API reference documentation
@@ -227,6 +238,8 @@ import { Badge } from '@/components/ui/Badge';
 - **`/community`** - Community forum with discussions
 - **`/support`** - Contact support page with multiple channels
 - **`/security`** - Security features and compliance information
+- **`/privacy`** - Privacy policy
+- **`/terms`** - Terms of service
 
 ### Authenticated Routes
 
@@ -324,10 +337,15 @@ Each page has detailed design specifications:
 ## 🎯 Roadmap
 
 ### Current Version (v1.0)
-- ✅ Complete design system
-- ✅ All core pages implemented
+- ✅ Complete design system with teal corporate branding
+- ✅ CloudDesk logo integration across all pages
+- ✅ All core pages implemented (15+ routes)
+- ✅ 13 global server regions
+- ✅ 8 GPU options with categorization
 - ✅ Responsive design
-- ✅ Accessibility compliance
+- ✅ Accessibility compliance (WCAG AA)
+- ✅ Professional icon system (Lucide React)
+- ✅ Legal pages (Privacy Policy, Terms of Service)
 - ✅ Mock data layer
 
 ### Upcoming Features
