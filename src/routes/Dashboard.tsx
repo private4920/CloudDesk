@@ -254,167 +254,140 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Instance List */}
-      <Card className="overflow-hidden">
-        {filteredInstances.length === 0 ? (
-          /* Empty State */
-          <div className="px-6 py-16 text-center">
-            <Monitor className="mx-auto mb-6 h-16 w-16 text-gray-300" />
-            <h3 className="mb-3 text-lg font-semibold text-gray-900">
-              {instances.length === 0 ? 'No desktops yet' : 'No desktops found'}
-            </h3>
-            <p className="mx-auto mb-8 max-w-md text-gray-600">
-              {instances.length === 0
-                ? 'Create your first cloud desktop to get started. Choose from pre-configured templates or customize your own.'
-                : 'No desktops match your current filters. Try adjusting your search or filter criteria.'}
-            </p>
-            {instances.length === 0 ? (
-              <Link to="/create">
-                <Button variant="primary" size="lg">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create Your First Desktop
-                </Button>
-              </Link>
-            ) : (
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  setSearchQuery('');
-                  setStatusFilter('all');
-                }}
-              >
-                Clear Filters
+      {/* Instance List - Card Layout */}
+      {filteredInstances.length === 0 ? (
+        /* Empty State */
+        <Card className="p-16 text-center">
+          <Monitor className="mx-auto mb-6 h-16 w-16 text-gray-300" />
+          <h3 className="mb-3 text-lg font-semibold text-gray-900">
+            {instances.length === 0 ? 'No desktops yet' : 'No desktops found'}
+          </h3>
+          <p className="mx-auto mb-8 max-w-md text-gray-600">
+            {instances.length === 0
+              ? 'Create your first cloud desktop to get started. Choose from pre-configured templates or customize your own.'
+              : 'No desktops match your current filters. Try adjusting your search or filter criteria.'}
+          </p>
+          {instances.length === 0 ? (
+            <Link to="/create">
+              <Button variant="primary" size="lg">
+                <Plus className="mr-2 h-4 w-4" />
+                Create Your First Desktop
               </Button>
-            )}
-          </div>
-        ) : (
-          /* Instance Table */
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="border-b border-gray-200 bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-900">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-900">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-900">
-                    Preset
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-900">
-                    Resources
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-900">
-                    Region
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-900">
-                    Created
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-900">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {filteredInstances.map((instance) => (
-                  <tr
-                    key={instance.id}
-                    className="cursor-pointer transition-colors hover:bg-gray-50"
-                    onClick={() =>
-                      (window.location.href = `/instances/${instance.id}`)
-                    }
-                  >
-                    <td className="whitespace-nowrap px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">
+            </Link>
+          ) : (
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setSearchQuery('');
+                setStatusFilter('all');
+              }}
+            >
+              Clear Filters
+            </Button>
+          )}
+        </Card>
+      ) : (
+        /* Instance Cards */
+        <div className="space-y-3">
+          {filteredInstances.map((instance) => (
+            <Link key={instance.id} to={`/instances/${instance.id}`}>
+              <Card className="p-5 hover:border-gray-300 hover:shadow-md transition-all cursor-pointer">
+                <div className="flex items-start justify-between gap-4">
+                  {/* Left: Name, Status, Resources */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="text-base font-semibold text-gray-900 truncate">
                         {instance.name}
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4">
+                      </h3>
                       <Badge variant={getStatusVariant(instance.status)}>
                         {instance.status}
                       </Badge>
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4">
-                      <div className="text-sm text-gray-600">
+                    </div>
+                    
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600">
+                      <span className="flex items-center gap-1">
+                        <Monitor className="h-3.5 w-3.5" />
                         {getPresetName(instance.imageId)}
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4">
-                      <div className="text-sm text-gray-600">
-                        {formatResources(
-                          instance.cpuCores,
-                          instance.ramGb,
-                          instance.storageGb
-                        )}
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4">
-                      <div className="text-sm text-gray-600">
-                        {REGION_NAMES[instance.region]}
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4">
-                      <div className="text-sm text-gray-500">
-                        {getRelativeTime(instance.createdAt)}
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        {/* Connect Button (only for running instances) */}
-                        {instance.status === 'RUNNING' && (
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <ExternalLink className="mr-1 h-3 w-3" />
-                            Connect
-                          </Button>
-                        )}
-                        {/* Start/Stop Button */}
-                        {instance.status === 'STOPPED' && (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={(e) =>
-                              handleStatusUpdate(e, instance.id, 'RUNNING')
-                            }
-                          >
-                            <Play className="mr-1 h-3 w-3" />
-                            Start
-                          </Button>
-                        )}
-                        {instance.status === 'RUNNING' && (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={(e) =>
-                              handleStatusUpdate(e, instance.id, 'STOPPED')
-                            }
-                          >
-                            <Pause className="mr-1 h-3 w-3" />
-                            Stop
-                          </Button>
-                        )}
-                        {/* Delete Button */}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => handleDelete(e, instance.id)}
-                          className="text-red-600 hover:bg-red-50 hover:text-red-700"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </Card>
+                      </span>
+                      <span>•</span>
+                      <span>{instance.cpuCores} vCPU</span>
+                      <span>•</span>
+                      <span>{instance.ramGb} GB RAM</span>
+                      <span>•</span>
+                      <span>{instance.storageGb} GB</span>
+                    </div>
+                    
+                    <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
+                      <span>{REGION_NAMES[instance.region]}</span>
+                      <span>•</span>
+                      <span>{getRelativeTime(instance.createdAt)}</span>
+                    </div>
+                  </div>
+
+                  {/* Right: Actions */}
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {/* Connect Button (only for running instances) */}
+                    {instance.status === 'RUNNING' && (
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                      >
+                        <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                        Connect
+                      </Button>
+                    )}
+                    
+                    {/* Start/Stop Button */}
+                    {instance.status === 'STOPPED' && (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleStatusUpdate(e, instance.id, 'RUNNING');
+                        }}
+                      >
+                        <Play className="mr-1.5 h-3.5 w-3.5" />
+                        Start
+                      </Button>
+                    )}
+                    {instance.status === 'RUNNING' && (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleStatusUpdate(e, instance.id, 'STOPPED');
+                        }}
+                      >
+                        <Pause className="mr-1.5 h-3.5 w-3.5" />
+                        Stop
+                      </Button>
+                    )}
+                    
+                    {/* Delete Button */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleDelete(e, instance.id);
+                      }}
+                      className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      )}
 
       {/* Results Info */}
       {filteredInstances.length > 0 && (
