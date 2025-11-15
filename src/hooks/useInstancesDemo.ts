@@ -31,6 +31,39 @@ export function useInstancesDemo() {
     }
   }, [instances]);
 
+  // Auto-transition PROVISIONING instances to RUNNING after 3-5 seconds
+  useEffect(() => {
+    const provisioningInstances = instances.filter(
+      (instance) => instance.status === 'PROVISIONING'
+    );
+
+    if (provisioningInstances.length === 0) return;
+
+    const timers = provisioningInstances.map((instance) => {
+      // Random delay between 3-5 seconds to simulate real provisioning
+      const delay = 3000 + Math.random() * 2000;
+      
+      return setTimeout(() => {
+        setInstances((prev) =>
+          prev.map((inst) =>
+            inst.id === instance.id
+              ? {
+                  ...inst,
+                  status: 'RUNNING',
+                  updatedAt: new Date().toISOString(),
+                }
+              : inst
+          )
+        );
+      }, delay);
+    });
+
+    // Cleanup timers on unmount or when instances change
+    return () => {
+      timers.forEach((timer) => clearTimeout(timer));
+    };
+  }, [instances]);
+
   /**
    * Create a new instance with generated ID and timestamps.
    * Status defaults to PROVISIONING if not provided.
