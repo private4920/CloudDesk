@@ -318,7 +318,7 @@ export default function Landing() {
             {/* Branding */}
             <div>
               <div className="mb-4">
-                <img src="/logo-clouddesk.png" alt="CloudDesk EDU" className="h-9 w-auto object-contain" />
+                <img src="/logo-clouddesk-white.png" alt="CloudDesk EDU" className="h-9 w-auto object-contain" />
               </div>
               <p className="text-sm">Cloud desktops for everyone</p>
             </div>
