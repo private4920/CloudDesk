@@ -321,7 +321,7 @@ export default function Dashboard() {
                   </div>
 
                   {/* Right: Actions */}
-                  <div className="flex items-center gap-2 flex-shrink-0">
+                  <div className="flex items-center gap-3 flex-shrink-0">
                     {/* Connect Button (only for running instances) */}
                     {instance.status === 'RUNNING' && (
                       <Button
@@ -332,7 +332,7 @@ export default function Dashboard() {
                           e.stopPropagation();
                         }}
                       >
-                        <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                        <ExternalLink className="mr-2 h-4 w-4" />
                         Connect
                       </Button>
                     )}
@@ -347,7 +347,7 @@ export default function Dashboard() {
                           handleStatusUpdate(e, instance.id, 'RUNNING');
                         }}
                       >
-                        <Play className="mr-1.5 h-3.5 w-3.5" />
+                        <Play className="mr-2 h-4 w-4" />
                         Start
                       </Button>
                     )}
@@ -360,7 +360,7 @@ export default function Dashboard() {
                           handleStatusUpdate(e, instance.id, 'STOPPED');
                         }}
                       >
-                        <Pause className="mr-1.5 h-3.5 w-3.5" />
+                        <Pause className="mr-2 h-4 w-4" />
                         Stop
                       </Button>
                     )}
@@ -375,7 +375,7 @@ export default function Dashboard() {
                       }}
                       className="text-red-600 hover:bg-red-50 hover:text-red-700"
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
