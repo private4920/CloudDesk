@@ -24,6 +24,8 @@ import {
   X
 } from 'lucide-react';
 
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
+
 export default function InstanceDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -34,6 +36,13 @@ export default function InstanceDetail() {
   const [isActionLoading, setIsActionLoading] = useState(false);
 
   const instance = instances.find(inst => inst.id === id);
+
+  // Dynamic document title
+  useDocumentTitle(
+    instance 
+      ? `${instance.name} (${instance.status})`
+      : 'Instance Not Found'
+  );
 
   // Show toast helper
   const showToast = (message: string) => {

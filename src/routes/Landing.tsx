@@ -4,7 +4,11 @@ import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { GraduationCap, Users, Briefcase, Zap, Settings, DollarSign, Globe } from 'lucide-react';
 
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
+
 export default function Landing() {
+  useDocumentTitle('Cloud Desktops for Everyone');
+  
   return (
     <div className="min-h-screen bg-white">
       {/* Top Navigation */}

@@ -6,6 +6,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
 import { useInstancesDemo } from '../hooks/useInstancesDemo';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { IMAGE_PRESETS } from '../data/images';
 import { calculateHourlyCost, calculateMonthlyCost } from '../data/pricing';
 import type { Region, GpuType } from '../data/types';
@@ -186,6 +187,19 @@ export default function CreateInstance() {
   };
 
   const selectedPreset = IMAGE_PRESETS.find((p) => p.id === selectedPresetId);
+
+  // Dynamic document title
+  const documentTitle = useMemo(() => {
+    if (isSubmitting) {
+      return 'Creating Instance...';
+    }
+    if (instanceName) {
+      return `Create "${instanceName}"`;
+    }
+    return 'Create Instance';
+  }, [isSubmitting, instanceName]);
+
+  useDocumentTitle(documentTitle);
 
   return (
     <div>

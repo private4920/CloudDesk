@@ -17,9 +17,13 @@ import {
   Plus
 } from 'lucide-react';
 
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
+
 export default function Classroom() {
   const [selectedPreset, setSelectedPreset] = useState<string>('development');
   const [studentCount] = useState(25);
+
+  useDocumentTitle('Classroom Mode (Coming Soon)');
 
   const presets = [
     {

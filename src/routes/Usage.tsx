@@ -5,10 +5,15 @@ import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { Monitor, DollarSign, Activity } from 'lucide-react';
 
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
+
 export default function Usage() {
   const { instances } = useInstancesDemo();
   const usageRows = buildUsage(instances);
   const summary = calculateUsageSummary(usageRows);
+
+  // Dynamic document title
+  useDocumentTitle(`Usage ($${summary.totalCost.toFixed(2)})`);
 
   // Sort by cost descending for display
   const sortedUsage = [...usageRows].sort((a, b) => b.estimatedCost - a.estimatedCost);

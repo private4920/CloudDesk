@@ -19,6 +19,7 @@ import { LiveIndicator } from '../components/ui/LiveIndicator';
 import { LastUpdated } from '../components/ui/LastUpdated';
 import { useInstancesDemo } from '../hooks/useInstancesDemo';
 import { useAutoRefresh } from '../hooks/useAutoRefresh';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { getPresetName } from '../data/images';
 import { REGION_NAMES } from '../data/types';
 import type { InstanceStatus } from '../data/types';
@@ -63,6 +64,16 @@ export default function Dashboard() {
 
   // Simplified cost calculation (based on running instances)
   const estimatedMonthlyCost = runningInstances * 42.5; // Rough estimate per instance
+
+  // Dynamic document title
+  const documentTitle = useMemo(() => {
+    if (runningInstances === 0) {
+      return 'Dashboard';
+    }
+    return `${runningInstances} Running`;
+  }, [runningInstances]);
+
+  useDocumentTitle(documentTitle);
 
   const handleStatusUpdate = async (
     e: React.MouseEvent,
