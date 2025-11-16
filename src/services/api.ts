@@ -6,7 +6,9 @@ let onUnauthorizedCallback: (() => void) | null = null;
 
 // Create Axios instance with base configuration
 const apiClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001',
+  // Use empty baseURL to make requests relative to current domain
+  // This allows the app to work both locally and through Cloudflare Tunnel
+  baseURL: import.meta.env.VITE_API_URL || '',
   withCredentials: true, // Enable sending cookies with requests
   headers: {
     'Content-Type': 'application/json',
