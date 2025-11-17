@@ -4,6 +4,30 @@ const { Pool } = require('pg');
 let pool = null;
 
 /**
+ * Transform database row from snake_case to camelCase for frontend
+ * @param {object} row - Database row with snake_case fields
+ * @returns {object} - Transformed object with camelCase fields
+ */
+const transformInstanceRow = (row) => {
+  if (!row) return null;
+  
+  return {
+    id: row.id,
+    name: row.name,
+    imageId: row.image_id,
+    status: row.status,
+    cpuCores: row.cpu_cores,
+    ramGb: row.ram_gb,
+    storageGb: row.storage_gb,
+    gpu: row.gpu,
+    region: row.region,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    userEmail: row.user_email  // Include for backend ownership checks
+  };
+};
+
+/**
  * Connect to PostgreSQL database with retry logic
  * Implements exponential backoff with 3 retry attempts
  */
@@ -126,7 +150,7 @@ const getInstancesByUser = async (email) => {
     `;
     const result = await pool.query(query, [email]);
     
-    return result.rows;
+    return result.rows.map(transformInstanceRow);
   } catch (error) {
     console.error('Error getting instances by user:', error.message);
     throw new Error(`Database query failed: ${error.message}`);
@@ -204,7 +228,7 @@ const createInstance = async (email, instanceData) => {
       throw new Error('Failed to create instance');
     }
     
-    return result.rows[0];
+    return transformInstanceRow(result.rows[0]);
   } catch (error) {
     console.error('Error creating instance:', error.message);
     throw new Error(`Database query failed: ${error.message}`);
@@ -256,7 +280,7 @@ const updateInstanceStatus = async (id, status) => {
       throw new Error(`Instance with id ${id} not found`);
     }
     
-    return result.rows[0];
+    return transformInstanceRow(result.rows[0]);
   } catch (error) {
     console.error('Error updating instance status:', error.message);
     throw new Error(`Database query failed: ${error.message}`);
@@ -301,7 +325,7 @@ const deleteInstance = async (id) => {
       throw new Error(`Instance with id ${id} not found`);
     }
     
-    return result.rows[0];
+    return transformInstanceRow(result.rows[0]);
   } catch (error) {
     console.error('Error deleting instance:', error.message);
     throw new Error(`Database query failed: ${error.message}`);
@@ -339,8 +363,8 @@ const getInstanceById = async (id) => {
 
     const result = await pool.query(query, [id]);
     
-    // Return null if instance not found, otherwise return the instance object
-    return result.rows.length > 0 ? result.rows[0] : null;
+    // Return null if instance not found, otherwise return the transformed instance object
+    return result.rows.length > 0 ? transformInstanceRow(result.rows[0]) : null;
   } catch (error) {
     console.error('Error getting instance by ID:', error.message);
     throw new Error(`Database query failed: ${error.message}`);
@@ -394,9 +418,9 @@ const calculateUsageSummary = async (email) => {
      * Calculate hourly cost for an instance
      */
     const calculateHourlyCost = (instance) => {
-      const cpuCost = instance.cpu_cores * PRICING_CONFIG.basePerCpuPerHour;
-      const ramCost = instance.ram_gb * PRICING_CONFIG.basePerRamGbPerHour;
-      const storageCost = instance.storage_gb * PRICING_CONFIG.basePerStorageGbPerHour;
+      const cpuCost = instance.cpuCores * PRICING_CONFIG.basePerCpuPerHour;
+      const ramCost = instance.ramGb * PRICING_CONFIG.basePerRamGbPerHour;
+      const storageCost = instance.storageGb * PRICING_CONFIG.basePerStorageGbPerHour;
       const gpuCost = PRICING_CONFIG.gpuExtraPerHour[instance.gpu] || 0;
 
       const totalCost = (cpuCost + ramCost + storageCost + gpuCost) * PRICING_CONFIG.markupRate;
@@ -424,7 +448,7 @@ const calculateUsageSummary = async (email) => {
 
     for (const instance of instances) {
       const hourlyCost = calculateHourlyCost(instance);
-      const hours = calculateHoursSinceCreation(instance.created_at);
+      const hours = calculateHoursSinceCreation(instance.createdAt);
       const estimatedCost = Math.round(hourlyCost * hours * 100) / 100;
 
       totalHours += hours;

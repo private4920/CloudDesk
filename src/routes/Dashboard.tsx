@@ -92,23 +92,32 @@ export default function Dashboard() {
   ) => {
     e.stopPropagation();
     
-    // Optimistic update - instant UI feedback
-    updateStatus(id, newStatus);
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Refresh timestamp after update
-    setLastUpdated(new Date());
+    try {
+      // Call updateStatus which handles both demo and authenticated modes
+      await updateStatus(id, newStatus);
+      
+      // Refresh timestamp after update
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error('Failed to update instance status:', error);
+      alert('Failed to update instance status. Please try again.');
+    }
   };
 
-  const handleDelete = (e: React.MouseEvent, id: string) => {
+  const handleDelete = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     const confirmMessage = isDemoMode 
       ? 'Are you sure you want to delete this instance? (Demo mode: This will only remove it from your browser storage)'
       : 'Are you sure you want to delete this instance?';
+    
     if (window.confirm(confirmMessage)) {
-      deleteInstance(id);
+      try {
+        await deleteInstance(id);
+        setLastUpdated(new Date());
+      } catch (error) {
+        console.error('Failed to delete instance:', error);
+        alert('Failed to delete instance. Please try again.');
+      }
     }
   };
 

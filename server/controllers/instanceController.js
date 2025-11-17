@@ -173,6 +173,20 @@ const createInstance = async (req, res, next) => {
       });
     }
 
+    // Auto-transition from PROVISIONING to RUNNING after 3-5 seconds
+    const transitionDelay = 3000 + Math.random() * 2000;
+    console.log(`Scheduling auto-transition for instance ${createdInstance.id} in ${Math.round(transitionDelay)}ms`);
+    
+    setTimeout(async () => {
+      try {
+        console.log(`Starting auto-transition for instance ${createdInstance.id}`);
+        await dbService.updateInstanceStatus(createdInstance.id, 'RUNNING');
+        console.log(`✓ Instance ${createdInstance.id} successfully transitioned to RUNNING`);
+      } catch (error) {
+        console.error(`✗ Failed to auto-transition instance ${createdInstance.id}:`, error);
+      }
+    }, transitionDelay);
+
     // Return created instance with 201 status
     return res.status(201).json({
       success: true,
@@ -260,7 +274,7 @@ const updateStatus = async (req, res, next) => {
     }
 
     // Check if instance belongs to the authenticated user
-    if (instance.user_email !== email) {
+    if (instance.userEmail !== email) {
       return res.status(403).json({
         success: false,
         error: 'Forbidden',
@@ -367,7 +381,7 @@ const deleteInstance = async (req, res, next) => {
     }
 
     // Check if instance belongs to the authenticated user
-    if (instance.user_email !== email) {
+    if (instance.userEmail !== email) {
       return res.status(403).json({
         success: false,
         error: 'Forbidden',
@@ -452,7 +466,7 @@ const getInstance = async (req, res, next) => {
     }
 
     // Validate instance ownership - check if instance belongs to the authenticated user
-    if (instance.user_email !== email) {
+    if (instance.userEmail !== email) {
       return res.status(403).json({
         success: false,
         error: 'Forbidden',

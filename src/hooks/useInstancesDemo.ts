@@ -73,8 +73,11 @@ export function useInstancesDemo() {
     }
   }, [isAuthenticated]);
 
-  // Auto-transition PROVISIONING instances to RUNNING after 3-5 seconds
+  // Auto-transition PROVISIONING instances to RUNNING after 3-5 seconds (demo mode only)
   useEffect(() => {
+    // Only auto-transition in demo mode
+    if (isAuthenticated) return;
+
     const provisioningInstances = instances.filter(
       (instance) => instance.status === 'PROVISIONING'
     );
@@ -104,7 +107,33 @@ export function useInstancesDemo() {
     return () => {
       timers.forEach((timer) => clearTimeout(timer));
     };
-  }, [instances]);
+  }, [instances, isAuthenticated]);
+
+  // Poll for status updates when authenticated and have provisioning instances
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const provisioningInstances = instances.filter(
+      (instance) => instance.status === 'PROVISIONING'
+    );
+
+    if (provisioningInstances.length === 0) return;
+
+    // Poll every 2 seconds to check for status updates
+    const pollInterval = setInterval(async () => {
+      try {
+        const fetchedInstances = await apiService.getInstances();
+        setInstances(fetchedInstances);
+      } catch (err) {
+        console.error('Failed to poll instances:', err);
+      }
+    }, 2000);
+
+    // Cleanup interval on unmount or when instances change
+    return () => {
+      clearInterval(pollInterval);
+    };
+  }, [instances, isAuthenticated]);
 
   /**
    * Create a new instance with generated ID and timestamps.
