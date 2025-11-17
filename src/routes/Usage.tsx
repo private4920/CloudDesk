@@ -1,22 +1,139 @@
+import { useState, useEffect } from 'react';
 import { useInstancesDemo } from '../hooks/useInstancesDemo';
 import { buildUsage, calculateUsageSummary } from '../data/usage';
-import { REGION_NAMES } from '../data/types';
+import { REGION_NAMES, type UsageSummary, type UsageRow } from '../data/types';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
-import { Monitor, DollarSign, Activity } from 'lucide-react';
-
+import { Monitor, DollarSign, Activity, TrendingUp } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { apiService } from '../services/api';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 export default function Usage() {
-  const { instances } = useInstancesDemo();
-  const usageRows = buildUsage(instances);
-  const summary = calculateUsageSummary(usageRows);
+  const { instances, isDemo } = useInstancesDemo();
+  const { isAuthenticated } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [apiUsageData, setApiUsageData] = useState<{
+    summary: UsageSummary;
+    usageRows: UsageRow[];
+  } | null>(null);
+
+  // Fetch usage data from API for authenticated users
+  useEffect(() => {
+    const fetchUsageData = async () => {
+      if (!isAuthenticated || isDemo) {
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const data = await apiService.getUsageSummary();
+        setApiUsageData({
+          summary: {
+            totalHours: data.totalHours,
+            totalCost: data.totalCost,
+            averageCostPerDesktop: data.averageCostPerDesktop,
+            activeDesktops: data.activeDesktops,
+          },
+          usageRows: data.usageByInstance,
+        });
+      } catch (err: any) {
+        console.error('Error fetching usage data:', err);
+        setError(err.message || 'Failed to load usage data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsageData();
+  }, [isAuthenticated, isDemo]);
+
+  // Use API data for authenticated users, localStorage data for demo mode
+  const usageRows = isAuthenticated && !isDemo && apiUsageData 
+    ? apiUsageData.usageRows 
+    : buildUsage(instances);
+  
+  const summary = isAuthenticated && !isDemo && apiUsageData
+    ? apiUsageData.summary
+    : calculateUsageSummary(usageRows);
 
   // Dynamic document title
   useDocumentTitle(`Usage ($${summary.totalCost.toFixed(2)})`);
 
   // Sort by cost descending for display
   const sortedUsage = [...usageRows].sort((a, b) => b.estimatedCost - a.estimatedCost);
+
+  // Show loading state for authenticated users
+  if (loading && isAuthenticated && !isDemo) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <Activity className="w-12 h-12 text-indigo-600 mx-auto mb-3 animate-pulse" />
+            <p className="text-sm text-gray-600">Loading usage data...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error && isAuthenticated && !isDemo) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <Activity className="w-12 h-12 text-red-500 mx-auto mb-3" />
+            <p className="text-sm text-red-600 mb-2">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+            >
+              Try again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state for authenticated users with no instances
+  const hasNoInstances = instances.length === 0 || usageRows.length === 0;
+  if (hasNoInstances && isAuthenticated && !isDemo) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        {/* Page Header */}
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl font-semibold text-gray-900 mb-2">Usage & Cost</h1>
+          <p className="text-sm text-gray-500">
+            Track your cloud desktop usage and estimated costs. All charges are based on actual runtime.
+          </p>
+        </div>
+
+        {/* Empty State */}
+        <Card className="p-12 text-center">
+          <div className="max-w-md mx-auto">
+            <div className="w-16 h-16 rounded-full bg-indigo-50 flex items-center justify-center mx-auto mb-4">
+              <TrendingUp className="w-8 h-8 text-indigo-600" />
+            </div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">No Usage Data Yet</h2>
+            <p className="text-gray-600 mb-6">
+              You haven't created any cloud desktops yet. Create your first desktop to start tracking usage and costs.
+            </p>
+            <a
+              href="/create"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Create Your First Desktop
+            </a>
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">

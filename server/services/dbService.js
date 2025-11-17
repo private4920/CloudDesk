@@ -96,6 +96,378 @@ const updateLastLogin = async (email) => {
 };
 
 /**
+ * Get all instances for a user
+ * @param {string} email - User email
+ * @returns {Promise<Array>} - Array of instance objects
+ */
+const getInstancesByUser = async (email) => {
+  try {
+    if (!pool) {
+      throw new Error('Database connection not established. Call connect() first.');
+    }
+
+    const query = `
+      SELECT 
+        id,
+        user_email,
+        name,
+        image_id,
+        status,
+        cpu_cores,
+        ram_gb,
+        storage_gb,
+        gpu,
+        region,
+        created_at,
+        updated_at
+      FROM instances 
+      WHERE user_email = $1 AND status != 'DELETED'
+      ORDER BY created_at DESC
+    `;
+    const result = await pool.query(query, [email]);
+    
+    return result.rows;
+  } catch (error) {
+    console.error('Error getting instances by user:', error.message);
+    throw new Error(`Database query failed: ${error.message}`);
+  }
+};
+
+/**
+ * Create a new instance
+ * @param {string} email - User email
+ * @param {object} instanceData - Instance configuration
+ * @param {string} instanceData.name - Instance name
+ * @param {string} instanceData.imageId - Image ID
+ * @param {number} instanceData.cpuCores - Number of CPU cores
+ * @param {number} instanceData.ramGb - RAM in GB
+ * @param {number} instanceData.storageGb - Storage in GB
+ * @param {string} instanceData.gpu - GPU type
+ * @param {string} instanceData.region - Region
+ * @returns {Promise<object>} - Created instance object
+ */
+const createInstance = async (email, instanceData) => {
+  try {
+    if (!pool) {
+      throw new Error('Database connection not established. Call connect() first.');
+    }
+
+    // Generate unique instance ID
+    const instanceId = `inst-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+    const query = `
+      INSERT INTO instances (
+        id,
+        user_email,
+        name,
+        image_id,
+        status,
+        cpu_cores,
+        ram_gb,
+        storage_gb,
+        gpu,
+        region,
+        created_at,
+        updated_at
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      RETURNING 
+        id,
+        user_email,
+        name,
+        image_id,
+        status,
+        cpu_cores,
+        ram_gb,
+        storage_gb,
+        gpu,
+        region,
+        created_at,
+        updated_at
+    `;
+
+    const values = [
+      instanceId,
+      email,
+      instanceData.name,
+      instanceData.imageId,
+      'PROVISIONING',
+      instanceData.cpuCores,
+      instanceData.ramGb,
+      instanceData.storageGb,
+      instanceData.gpu,
+      instanceData.region
+    ];
+
+    const result = await pool.query(query, values);
+    
+    if (result.rows.length === 0) {
+      throw new Error('Failed to create instance');
+    }
+    
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error creating instance:', error.message);
+    throw new Error(`Database query failed: ${error.message}`);
+  }
+};
+
+/**
+ * Update instance status
+ * @param {string} id - Instance ID
+ * @param {string} status - New status (PROVISIONING, RUNNING, STOPPED, DELETED, ERROR)
+ * @returns {Promise<object>} - Updated instance object
+ */
+const updateInstanceStatus = async (id, status) => {
+  try {
+    if (!pool) {
+      throw new Error('Database connection not established. Call connect() first.');
+    }
+
+    // Validate status
+    const validStatuses = ['PROVISIONING', 'RUNNING', 'STOPPED', 'DELETED', 'ERROR'];
+    if (!validStatuses.includes(status)) {
+      throw new Error(`Invalid status: ${status}. Must be one of: ${validStatuses.join(', ')}`);
+    }
+
+    const query = `
+      UPDATE instances 
+      SET 
+        status = $1,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = $2
+      RETURNING 
+        id,
+        user_email,
+        name,
+        image_id,
+        status,
+        cpu_cores,
+        ram_gb,
+        storage_gb,
+        gpu,
+        region,
+        created_at,
+        updated_at
+    `;
+
+    const result = await pool.query(query, [status, id]);
+    
+    if (result.rows.length === 0) {
+      throw new Error(`Instance with id ${id} not found`);
+    }
+    
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error updating instance status:', error.message);
+    throw new Error(`Database query failed: ${error.message}`);
+  }
+};
+
+/**
+ * Delete instance (soft delete by setting status to DELETED)
+ * @param {string} id - Instance ID
+ * @returns {Promise<object>} - Updated instance object with DELETED status
+ */
+const deleteInstance = async (id) => {
+  try {
+    if (!pool) {
+      throw new Error('Database connection not established. Call connect() first.');
+    }
+
+    const query = `
+      UPDATE instances 
+      SET 
+        status = 'DELETED',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = $1
+      RETURNING 
+        id,
+        user_email,
+        name,
+        image_id,
+        status,
+        cpu_cores,
+        ram_gb,
+        storage_gb,
+        gpu,
+        region,
+        created_at,
+        updated_at
+    `;
+
+    const result = await pool.query(query, [id]);
+    
+    if (result.rows.length === 0) {
+      throw new Error(`Instance with id ${id} not found`);
+    }
+    
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error deleting instance:', error.message);
+    throw new Error(`Database query failed: ${error.message}`);
+  }
+};
+
+/**
+ * Get instance by ID
+ * @param {string} id - Instance ID
+ * @returns {Promise<object|null>} - Instance object or null if not found
+ */
+const getInstanceById = async (id) => {
+  try {
+    if (!pool) {
+      throw new Error('Database connection not established. Call connect() first.');
+    }
+
+    const query = `
+      SELECT 
+        id,
+        user_email,
+        name,
+        image_id,
+        status,
+        cpu_cores,
+        ram_gb,
+        storage_gb,
+        gpu,
+        region,
+        created_at,
+        updated_at
+      FROM instances 
+      WHERE id = $1
+    `;
+
+    const result = await pool.query(query, [id]);
+    
+    // Return null if instance not found, otherwise return the instance object
+    return result.rows.length > 0 ? result.rows[0] : null;
+  } catch (error) {
+    console.error('Error getting instance by ID:', error.message);
+    throw new Error(`Database query failed: ${error.message}`);
+  }
+};
+
+/**
+ * Calculate usage summary for a user
+ * @param {string} email - User email
+ * @returns {Promise<object>} - Usage summary with totalHours, totalCost, averageCostPerDesktop, activeDesktops
+ */
+const calculateUsageSummary = async (email) => {
+  try {
+    if (!pool) {
+      throw new Error('Database connection not established. Call connect() first.');
+    }
+
+    // Get all user instances (excluding DELETED)
+    const instances = await getInstancesByUser(email);
+
+    // If no instances, return zero summary
+    if (instances.length === 0) {
+      return {
+        totalHours: 0,
+        totalCost: 0,
+        averageCostPerDesktop: 0,
+        activeDesktops: 0,
+        usageByInstance: []
+      };
+    }
+
+    // Pricing configuration (matching frontend pricing.ts)
+    const PRICING_CONFIG = {
+      basePerCpuPerHour: 0.04,
+      basePerRamGbPerHour: 0.01,
+      basePerStorageGbPerHour: 0.001,
+      gpuExtraPerHour: {
+        NONE: 0.0,
+        T4: 0.50,
+        V100: 2.50,
+        A10: 1.80,
+        A100: 4.00,
+        H100: 8.00,
+        RTX_4090: 2.80,
+        RTX_A6000: 3.20,
+      },
+      markupRate: 1.0,
+    };
+
+    /**
+     * Calculate hourly cost for an instance
+     */
+    const calculateHourlyCost = (instance) => {
+      const cpuCost = instance.cpu_cores * PRICING_CONFIG.basePerCpuPerHour;
+      const ramCost = instance.ram_gb * PRICING_CONFIG.basePerRamGbPerHour;
+      const storageCost = instance.storage_gb * PRICING_CONFIG.basePerStorageGbPerHour;
+      const gpuCost = PRICING_CONFIG.gpuExtraPerHour[instance.gpu] || 0;
+
+      const totalCost = (cpuCost + ramCost + storageCost + gpuCost) * PRICING_CONFIG.markupRate;
+
+      return Math.round(totalCost * 100) / 100; // Round to 2 decimal places
+    };
+
+    /**
+     * Calculate hours since instance creation
+     * For now, we calculate based on created_at timestamp
+     * In a real system, this would track actual running hours
+     */
+    const calculateHoursSinceCreation = (createdAt) => {
+      const now = new Date();
+      const created = new Date(createdAt);
+      const diffMs = now - created;
+      const diffHours = diffMs / (1000 * 60 * 60);
+      return Math.max(0, Math.round(diffHours * 100) / 100); // Round to 2 decimal places
+    };
+
+    // Calculate usage for each instance
+    let totalHours = 0;
+    let totalCost = 0;
+    const usageByInstance = [];
+
+    for (const instance of instances) {
+      const hourlyCost = calculateHourlyCost(instance);
+      const hours = calculateHoursSinceCreation(instance.created_at);
+      const estimatedCost = Math.round(hourlyCost * hours * 100) / 100;
+
+      totalHours += hours;
+      totalCost += estimatedCost;
+
+      usageByInstance.push({
+        instanceId: instance.id,
+        instanceName: instance.name,
+        status: instance.status,
+        hours: hours,
+        avgHourlyRate: hourlyCost,
+        estimatedCost: estimatedCost
+      });
+    }
+
+    // Count active desktops (RUNNING or PROVISIONING)
+    const activeDesktops = instances.filter(
+      inst => inst.status === 'RUNNING' || inst.status === 'PROVISIONING'
+    ).length;
+
+    // Calculate average cost per desktop
+    const averageCostPerDesktop = instances.length > 0 
+      ? Math.round((totalCost / instances.length) * 100) / 100 
+      : 0;
+
+    // Round totals
+    totalHours = Math.round(totalHours * 100) / 100;
+    totalCost = Math.round(totalCost * 100) / 100;
+
+    return {
+      totalHours,
+      totalCost,
+      averageCostPerDesktop,
+      activeDesktops,
+      usageByInstance
+    };
+  } catch (error) {
+    console.error('Error calculating usage summary:', error.message);
+    throw new Error(`Database query failed: ${error.message}`);
+  }
+};
+
+/**
  * Disconnect from the database and close the connection pool
  */
 const disconnect = async () => {
@@ -115,5 +487,11 @@ module.exports = {
   connect,
   isEmailApproved,
   updateLastLogin,
+  getInstancesByUser,
+  createInstance,
+  updateInstanceStatus,
+  deleteInstance,
+  getInstanceById,
+  calculateUsageSummary,
   disconnect
 };
